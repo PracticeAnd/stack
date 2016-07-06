@@ -1,0 +1,45 @@
+group 'com.andersenpractice'
+
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-release" }
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+war {
+    baseName = 'andersenpractice'
+    version = '1.0-SNAPSHOT'
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-release" }
+}
+
+dependencies {
+
+    compile ("javax.servlet:javax.servlet-api:4.0.0-b01")
+    compile ("org.springframework:spring-context:4.3.0.RELEASE")
+    compile ("org.springframework:spring-webmvc:4.3.0.RELEASE")
+    compile ("org.springframework:spring-web:4.3.0.RELEASE")
+    compile ("org.springframework.security:spring-security-web:4.1.0.RELEASE")
+    compile ("org.springframework.security:spring-security-core:4.1.0.RELEASE")
+    compile ("org.springframework.security:spring-security-config:4.1.0.RELEASE")
+    compile ("org.springframework.security:spring-security-taglibs:4.1.0.RELEASE")
+    compile ("org.springframework:spring-jdbc:4.3.1.RELEASE")
+    compile ("org.thymeleaf:thymeleaf-spring4:3.0.0.RELEASE")
+    compile ("org.hibernate:hibernate-validator:5.2.4.Final")
+    compile ("org.apache.tomcat.embed:tomcat-embed-el:8.0.36")
+
+    testCompile("junit:junit:4.12")
+    testCompile("org.mockito:mockito-core:1.9.5")
+    testCompile("org.springframework:spring-test:4.3.0.RELEASE")
+}

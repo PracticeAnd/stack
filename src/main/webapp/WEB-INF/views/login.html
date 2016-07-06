@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{project.title}"></title>
+    <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css'>
+    <link rel="stylesheet"
+          type="text/css"
+          th:href="@{resources/style.css}"/>
+</head>
+<body>
+
+<div align="right"><a href="?locale=en">English </a> | <a href="?locale=ru">Russian </a></div>
+
+<div class="wrapper">
+    <!--/*@thymesVar id="user" type="stack.model.User"*/-->
+    <form th:object="${user}" method="post" class="form-login"
+            action="#" th:action="@{login}">
+        <h2 class="form-login-heading" th:text="#{login.welcome}"></h2>
+        <input type="text" th:field="*{login}" th:placeholder="#{login.username}" class="form-control"
+               required="" autofocus=""/>
+        <input type="password" th:field="*{password}" th:placeholder="#{login.password}" class="form-control"
+               required=""/>
+        <label class="checkbox">
+            <input type="checkbox" th:text="#{login.remember}" value="remember-me" name="rememberMe">
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{login.submit}"></button>
+        <div class="utilities">
+            <a href="#" th:text="#{login.fogot.password}"></a>
+            <a th:href="@{/user/register}" th:text="#{login.signup}"></a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
