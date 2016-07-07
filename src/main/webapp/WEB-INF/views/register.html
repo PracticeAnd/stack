@@ -14,7 +14,8 @@
 <div align="right"><a href="?locale=en">English </a> | <a href="?locale=ru">Russian </a></div>
 
 <div class="wrapper">
-    <!--/*@thymesVar id="user" type="ru.stackoverflow.entity.User"*/-->
+
+    <!--/*@thymesVar id="user" type="stack.model.User"*/-->
     <form th:object="${user}" method="post" class="form-login">
         <h2 class="form-login-heading" th:text="#{register.title}"></h2>
         <input type="text" th:field="*{login}" th:placeholder="#{login.username}"

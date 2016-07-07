@@ -5,11 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import stack.model.User;
 import stack.dao.UserDAO;
+import stack.model.User;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,7 +51,6 @@ public class LoginController {
         list = userDAO.listOfUser();
 
         for(stack.model.User user : list) {
-            System.out.println(user.getId());
             if(user.getLogin().equals(name))
                 return true;
         }

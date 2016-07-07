@@ -21,4 +21,6 @@ public class StackWebInitializer extends AbstractAnnotationConfigDispatcherServl
     protected String[] getServletMappings() {
         return new String[]{"/"};
     }
+
+
 }
