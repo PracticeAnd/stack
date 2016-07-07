@@ -35,9 +35,9 @@ public class UserController {
     public String processRegistration(
             @Valid User user,
             Errors errors) {
-//        if (errors.hasErrors()) {
-//            return "register";
-//        }
+        if (errors.hasErrors()) {
+            return "register";
+        }
 
         if(checkRegister(user.getLogin(), user.getPassword(), user.getConfirmPassword())) {
             userDAO.addOrUpdateUser(new User(user.getLogin(), user.getPassword()));

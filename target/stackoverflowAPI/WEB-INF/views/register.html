@@ -21,9 +21,11 @@
         <input type="text" th:field="*{login}" th:placeholder="#{login.username}"
                class="form-control"
                required="" autofocus=""/>
+        <p class="error" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></p>
         <input type="password" th:field="*{password}" th:placeholder="#{register.password}"
                class="form-control"
                required=""/>
+        <p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
         <input type="password" th:field="*{confirmPassword}"th:placeholder="#{register.confirm.password}"
                class="form-control"
                required=""/>

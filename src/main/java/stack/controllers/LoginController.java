@@ -24,18 +24,18 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value="/", method = RequestMethod.POST)
     public String checkInputLoginDates(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "login";
-        }
+        } else
         return "redirect:/index";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String loginForm(@Valid User user,
                             final BindingResult errors) {
-//        if (errors.hasErrors()) {
+//        if (!errors.hasErrors()) {
 //            return "login";
 //        }
 

@@ -24,8 +24,14 @@ public class UserDAOImpl implements UserDAO{
     //Добалвение нового пользователя в БД
     @Override
     public void addOrUpdateUser(User user) {
-        String sql = "INSERT INTO public.\"Users\" (login, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, getPreparedStatement(user));
+        String sqlInsert = "INSERT INTO public.\"Users\" (login, password) VALUES (?, ?)";
+        String sqlUpdate = "UPDATE public.\"Users\" SET firstName = ?, secondName = ?, password = ?, email = ? WHERE user_id = ?";
+
+        if(user.getId() == null)
+            jdbcTemplate.update(sqlInsert, getPreparedStatementForInsert(user));
+        else {
+            jdbcTemplate.update(sqlUpdate, getPreparedStatementForUpdate(user));
+        }
     }
 
     //Метод для вывода полного списка юзеров
@@ -44,7 +50,6 @@ public class UserDAOImpl implements UserDAO{
                 return user;
             }
         });
-
         return userList;
     }
 
@@ -53,17 +58,6 @@ public class UserDAOImpl implements UserDAO{
     @Override
     public void removeUser(Integer id) {
 
-    }
-
-    //Метод для изменения или создания пользователя
-    private PreparedStatementSetter getPreparedStatement(final User user) {
-        return new PreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                preparedStatement.setString(1, user.getLogin());
-                preparedStatement.setString(2, user.getPassword());
-            }
-        };
     }
 
     //Метод для вытаскивания из базы юзера по id
@@ -87,5 +81,30 @@ public class UserDAOImpl implements UserDAO{
             return null;
             }
         });
+    }
+
+    //Вспомогательный Метод для создания пользователя
+    private PreparedStatementSetter getPreparedStatementForInsert(final User user) {
+        return new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setString(1, user.getLogin());
+                preparedStatement.setString(2, user.getPassword());
+            }
+        };
+    }
+
+    //Вспомогательный метод для обновления информации о пользователе
+    private PreparedStatementSetter getPreparedStatementForUpdate(final User user) {
+        return new PreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setString(1, user.getFirstName());
+                preparedStatement.setString(2, user.getLastName());
+                preparedStatement.setString(3, user.getPassword());
+                preparedStatement.setString(4, user.getEmail());
+                preparedStatement.setInt(5, user.getId());
+            }
+        };
     }
 }

@@ -20,7 +20,6 @@ public class User {
     @Size(min = 5, max = 25, message = "{password.size}")
     private String confirmPassword;
 
-    @NotNull
     @Email
     private String email;
 
