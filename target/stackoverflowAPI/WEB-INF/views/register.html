@@ -15,7 +15,8 @@
 
 <div class="wrapper">
     <!--/*@thymesVar id="user" type="ru.stackoverflow.entity.User"*/-->
-    <form th:object="${user}" method="post" class="form-login">
+    <form th:object="${user}" method="post" class="form-login"
+          action="#" th:action="@{register}">
         <h2 class="form-login-heading" th:text="#{register.title}"></h2>
         <input type="text" th:field="*{login}" th:placeholder="#{login.username}"
                class="form-control"
@@ -23,7 +24,7 @@
         <input type="password" th:field="*{password}" th:placeholder="#{register.password}"
                class="form-control"
                required=""/>
-        <input type="password" th:placeholder="#{register.confirm.password}"
+        <input type="password" th:field="*{confirmPassword}"th:placeholder="#{register.confirm.password}"
                class="form-control"
                required=""/>
         <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{register.submit}"></button>

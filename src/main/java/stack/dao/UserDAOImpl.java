@@ -24,14 +24,14 @@ public class UserDAOImpl implements UserDAO{
     //Добалвение нового пользователя в БД
     @Override
     public void addOrUpdateUser(User user) {
-        String sql = "INSERT INTO stack.public.\"Users\" (login, password) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO public.\"Users\" (login, password) VALUES (?, ?)";
         jdbcTemplate.update(sql, getPreparedStatement(user));
     }
 
     //Метод для вывода полного списка юзеров
     @Override
     public List<User> listOfUser() {
-        String sql = "SELECT * FROM stack.public.\"Users\"";
+        String sql = "SELECT * FROM public.\"Users\"";
         List<User> userList = jdbcTemplate.query(sql, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -60,10 +60,8 @@ public class UserDAOImpl implements UserDAO{
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                int i = 0;
-                preparedStatement.setString(++i, user.getLogin());
-                preparedStatement.setString(++i, user.getPassword());
-                preparedStatement.setInt(++i, user.getId());
+                preparedStatement.setString(1, user.getLogin());
+                preparedStatement.setString(2, user.getPassword());
             }
         };
     }
@@ -71,7 +69,7 @@ public class UserDAOImpl implements UserDAO{
     //Метод для вытаскивания из базы юзера по id
     @Override
     public User getUser(Integer userId) {
-        String sql = "SELECT * FROM stack.Users WHERE user_id = " + userId;
+        String sql = "SELECT * FROM public.Users WHERE user_id = " + userId;
 
         return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
             @Override

@@ -9,7 +9,6 @@ import stack.model.User;
 import stack.dao.UserDAO;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -40,20 +39,20 @@ public class LoginController {
             return "login";
         }
 
-        if(checkLogin(user.getLogin())) {
+        if(checkLoginAndPassword(user.getLogin(), user.getPassword())) {
             return "index";
         } else
             return "error";
     }
 
-    public boolean checkLogin(String name) {
+    public boolean checkLoginAndPassword(String name, String password) {
         List<stack.model.User> list;
 
         list = userDAO.listOfUser();
 
         for(stack.model.User user : list) {
             System.out.println(user.getId());
-            if(user.getLogin().equals(name))
+            if((user.getLogin().equals(name)) && (user.getPassword().equals(password)))
                 return true;
         }
         return false;
