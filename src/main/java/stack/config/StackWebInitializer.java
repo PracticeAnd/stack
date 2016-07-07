@@ -9,7 +9,7 @@ public class StackWebInitializer extends AbstractAnnotationConfigDispatcherServl
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{RootConfig.class};
+        return new Class<?>[]{DataConfig.class};
     }
 
     @Override

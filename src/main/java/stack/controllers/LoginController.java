@@ -35,9 +35,9 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String loginForm(@Valid User user,
                             final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return "login";
-        }
+//        if (errors.hasErrors()) {
+//            return "login";
+//        }
 
         if(checkLoginAndPassword(user.getLogin(), user.getPassword())) {
             return "index";
@@ -46,12 +46,11 @@ public class LoginController {
     }
 
     public boolean checkLoginAndPassword(String name, String password) {
-        List<stack.model.User> list;
+        List<User> list;
 
         list = userDAO.listOfUser();
 
-        for(stack.model.User user : list) {
-            System.out.println(user.getId());
+        for(User user : list) {
             if((user.getLogin().equals(name)) && (user.getPassword().equals(password)))
                 return true;
         }
