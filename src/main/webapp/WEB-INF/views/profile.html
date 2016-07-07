@@ -14,11 +14,48 @@
 <a th:href="@{/logout}">Logout</a>
 
 
-<div id="content">
-    <h1>Your Profile</h1>
-    <span th:text="${user.login}">Login</span><br/>
-    <span th:text="${user.email}">Email</span>
-</div>
+<h1 th:text="#{profile.header}"></h1>
+<!--/*@thymesVar id="user" type="stack.model.User"*/-->
+<form id="content" th:action="@{|/user/${user.login}|}" th:object="${user}" method="post">
+    <div>
+        <input type="hidden" th:field="*{id}">
+    </div>
+    <div>
+        <label th:text="#{profile.login}"/>
+        <label th:text="*{login}"/>
+        <input type="hidden" name="login" th:value="${user.getLogin()}" th:field="*{login}"/>
+    </div>
 
+    <div>
+        <input type="hidden" name="password" th:field="*{password}"/>
+    </div>
+    <div>
+        <label th:text="#{profile.email}"/>
+        <input type="email" name="email" th:value="${user.getEmail()}" th:field="*{email}"/>
+    </div>
+
+    <div>
+        <label th:text="#{profile.firstName}"/>
+        <input type="text" name="firstname" th:value="${user.getFirstName()}" th:field="*{firstName}"/>
+    </div>
+
+    <div>
+        <label th:text="#{profile.lastName}"/>
+        <input type="text" name="lastname" th:value="${user.getLastName()}" th:field="*{lastName}" />
+    </div>
+
+    <div>
+        <label th:text="#{profile.avatar}"/>
+        <input type="image" th:icon="*{avatar}"/>
+        <label th:text="#{profile.addAvatar}">
+            <input type="file"
+                   name="avatar"
+                   accept="image/jpeg,image/png,image/gif" th:field="*{avatar}"/>
+        </label>
+    </div>
+
+    <button type="submit" th:text="#{button.save}"></button>
+    <button type="reset" th:text="#{button.cancel}"></button>
+</form>
 </body>
 </html>

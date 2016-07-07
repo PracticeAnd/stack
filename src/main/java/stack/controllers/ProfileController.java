@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import stack.dao.UserDAO;
 import stack.model.User;
@@ -14,33 +15,35 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * Created by Оля on 05.07.2016.
+ * Created by Оля on 07.07.2016.
  */
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping(value = "/user")
+public class ProfileController {
 
     @Autowired
-    private UserDAO userDAO;
+    UserDAO userDAO;
 
-    @RequestMapping(value = "/register", method = GET)
-    public String showRegistrationForm(Model model) {
-        model.addAttribute(new User());
-        return "register";
+    @RequestMapping(value = "/{login}", method = GET)
+    public String showUserProfile(
+            @PathVariable("login") String login,
+            Model model) {
+        if (!model.containsAttribute("user")) {
+            model.addAttribute(
+                    userDAO.getUserByLogin(login));
+        }
+        return "profile";
     }
 
-    @RequestMapping(value = "/register", method = POST)
-    public String processRegistration(
+    @RequestMapping(value = "/{login}", method = POST)
+    public String saveProfile(
             @Valid User user,
             Errors errors) {
         if (errors.hasErrors()) {
-            return "register";
+            return "profile";
         }
-
+        userDAO.addOrUpdateUser(user);
         return "redirect:/index";
-        //userRepository.save(user);
-        //return "redirect:/user/" + user.getUsername();
     }
-
 
 }

@@ -9,6 +9,10 @@
 </head>
 <body>
 
+<div>
+    <a th:text="#{profile.link}" th:href="@{|/user/${user.login}|}"></a>
+</div>
+
 Congratulations! You log in successfully.
 
 </body>
