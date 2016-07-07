@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{project.title}"></title>
+    <link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css'>
+    <link rel="stylesheet"
+          type="text/css"
+          th:href="@{resources/style.css}"/>
+</head>
+<body>
+
+<div align="right"><a href="?locale=en">English </a> | <a href="?locale=ru">Russian </a></div>
+<a th:href="@{/logout}">Logout</a>
+
+
+<div id="content">
+    <h1>Your Profile</h1>
+    <span th:text="${user.login}">Login</span><br/>
+    <span th:text="${user.email}">Email</span>
+</div>
+
+</body>
+</html>
