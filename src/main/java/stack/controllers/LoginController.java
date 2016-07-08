@@ -24,12 +24,22 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value="/", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String showLoginPage(User user) {
+        return "login";
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String showLogoutPage(User user) {
+        return "login";
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public String checkInputLoginDates(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "login";
         } else
-        return "redirect:/index";
+            return "redirect:/index";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -39,7 +49,7 @@ public class LoginController {
 //            return "login";
 //        }
 
-        if(checkLoginAndPassword(user.getLogin(), user.getPassword())) {
+        if (checkLoginAndPassword(user.getLogin(), user.getPassword())) {
             return "index";
         } else
             return "error";
@@ -50,8 +60,8 @@ public class LoginController {
 
         list = userDAO.listOfUser();
 
-        for(User user : list) {
-            if((user.getLogin().equals(name)) && (user.getPassword().equals(password)))
+        for (User user : list) {
+            if ((user.getLogin().equals(name)) && (user.getPassword().equals(password)))
                 return true;
         }
         return false;
