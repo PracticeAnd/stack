@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserDAOImpl implements UserDAO{
+public class UserDAOImpl implements UserDAO {
 
     private JdbcTemplate jdbcTemplate;
 
@@ -24,10 +24,14 @@ public class UserDAOImpl implements UserDAO{
     //Добалвение нового пользователя в БД
     @Override
     public void addOrUpdateUser(User user) {
-        String sqlInsert = "INSERT INTO public.\"Users\" (login, password) VALUES (?, ?)";
+       /* String sqlInsert = "INSERT INTO public.\"Users\" (login, password) VALUES (?, ?)";
         String sqlUpdate = "UPDATE public.\"Users\" SET firstName = ?, secondName = ?, password = ?, email = ? WHERE user_id = ?";
+*/
+        String sqlInsert = "INSERT INTO User (login, password, email) VALUES (?, ?, ?)";
+        String sqlUpdate = "UPDATE User SET firstName = ?, lastName = ?, password = ?, email = ? WHERE user_id = ?";
 
-        if(user.getId() == null)
+
+        if (user.getId() == null)
             jdbcTemplate.update(sqlInsert, getPreparedStatementForInsert(user));
         else {
             jdbcTemplate.update(sqlUpdate, getPreparedStatementForUpdate(user));
@@ -37,15 +41,19 @@ public class UserDAOImpl implements UserDAO{
     //Метод для вывода полного списка юзеров
     @Override
     public List<User> listOfUser() {
-        String sql = "SELECT * FROM public.\"Users\"";
+        //String sql = "SELECT * FROM public.\"Users\"";
+        String sql = "SELECT * FROM User";
         List<User> userList = jdbcTemplate.query(sql, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
                 User user = new User();
 
-                user.setId(resultSet.getInt(3));
-                user.setLogin(resultSet.getString(1));
-                user.setPassword(resultSet.getString(2));
+                user.setId(resultSet.getInt("user_id"));
+                user.setLogin(resultSet.getString("login"));
+                user.setPassword(resultSet.getString("password"));
+                user.setEmail(resultSet.getString("email"));
+                user.setFirstName(resultSet.getString("firstname"));
+                user.setLastName(resultSet.getString("lastname"));
 
                 return user;
             }
@@ -63,7 +71,8 @@ public class UserDAOImpl implements UserDAO{
     //Метод для вытаскивания из базы юзера по id
     @Override
     public User getUser(Integer userId) {
-        String sql = "SELECT * FROM public.Users WHERE user_id = " + userId;
+        //String sql = "SELECT * FROM public.Users WHERE user_id = " + userId;
+        String sql = "SELECT * FROM User WHERE user_id = " + userId;
 
         return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
             @Override
@@ -75,10 +84,38 @@ public class UserDAOImpl implements UserDAO{
                     user.setId(resultSet.getInt("user_id"));
                     user.setLogin(resultSet.getString("login"));
                     user.setPassword(resultSet.getString("password"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setFirstName(resultSet.getString("firstname"));
+                    user.setLastName(resultSet.getString("lastname"));
 
                     return user;
                 }
-            return null;
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public User getUserByLogin(String login) {
+//        String sql = "SELECT * FROM public.Users WHERE login = '" + login + "'";
+        String sql = "SELECT * FROM User WHERE login = '" + login + "'";
+        return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
+            @Override
+            public User extractData(ResultSet resultSet) throws SQLException,
+                    DataAccessException {
+                if (resultSet.next()) {
+                    User user = new User();
+
+                    user.setId(resultSet.getInt("user_id"));
+                    user.setLogin(resultSet.getString("login"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setFirstName(resultSet.getString("firstname"));
+                    user.setLastName(resultSet.getString("lastname"));
+
+                    return user;
+                }
+                return null;
             }
         });
     }
@@ -90,6 +127,7 @@ public class UserDAOImpl implements UserDAO{
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
                 preparedStatement.setString(1, user.getLogin());
                 preparedStatement.setString(2, user.getPassword());
+                preparedStatement.setString(3, user.getEmail());
             }
         };
     }

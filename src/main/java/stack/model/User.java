@@ -2,23 +2,20 @@ package stack.model;
 
 import org.hibernate.validator.constraints.Email;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class User {
     private Integer id;
 
-    @NotNull
     @Size(min = 5, max = 16, message = "{username.size}")
     private String login;
 
-    @NotNull
     @Size(min = 5, max = 25, message = "{password.size}")
     private String password;
 
-    @NotNull
-    @Size(min = 5, max = 25, message = "{password.size}")
     private String confirmPassword;
+
+    private String newPassword;
 
     @Email
     private String email;
@@ -32,9 +29,10 @@ public class User {
     public User() {
     }
 
-    public User(String login, String password) {
+    public User(String login, String password, String email) {
         this.login = login;
         this.password = password;
+        this.email = email;
     }
 
     public User(String login, String password, Integer id) {
@@ -96,12 +94,22 @@ public class User {
         this.confirmPassword = confirmPassword;
     }
 
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", newPassword='" + newPassword + '\'' +
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

@@ -26,7 +26,7 @@ public class ProfileController {
 
     @RequestMapping(value = "/{login}", method = GET)
     public String showUserProfile(
-            @PathVariable("login") String login,
+            @PathVariable String login,
             Model model) {
         if (!model.containsAttribute("user")) {
             model.addAttribute(
@@ -42,8 +42,44 @@ public class ProfileController {
         if (errors.hasErrors()) {
             return "profile";
         }
-        userDAO.addOrUpdateUser(user);
+
+        if (!isPasswordsEmpty(user)){
+            if(!checkPasswordsUser(user)){
+                return "profile";
+            }
+        }
+            userDAO.addOrUpdateUser(user);
         return "redirect:/index";
+    }
+
+    private boolean isPasswordsEmpty(User user) {
+        String newPassword = user.getNewPassword();
+        String confirmPassword = user.getConfirmPassword();
+
+        newPassword = newPassword.trim();
+        confirmPassword = confirmPassword.trim();
+
+        if (!newPassword.equals("") && !confirmPassword.equals("")) {
+            return false;
+        } else
+            return true;
+    }
+
+    private boolean checkPasswordsUser(User user) {
+
+        String newPassword = user.getNewPassword();
+        String confirmPassword = user.getConfirmPassword();
+
+        newPassword = newPassword.trim();
+        confirmPassword = confirmPassword.trim();
+
+        if (newPassword.equals(confirmPassword)) {
+            user.setPassword(newPassword);
+            user.setNewPassword("");
+            user.setConfirmPassword("");
+            return true;
+        }
+        return false;
     }
 
 }

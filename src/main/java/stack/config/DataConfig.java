@@ -5,7 +5,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import stack.dao.UserDAO;
 import stack.dao.UserDAOImpl;
 
@@ -24,7 +25,7 @@ public class DataConfig {
     @Resource
     private Environment environment;
 
-    @Bean
+    /*@Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource =
                 new DriverManagerDataSource();
@@ -35,6 +36,14 @@ public class DataConfig {
         dataSource.setPassword(environment.getRequiredProperty(PROP_DATABASE_PASSWORD));
 
         return dataSource;
+    }*/
+
+    @Bean
+    public DataSource dataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .addScripts("classpath:schema.sql", "classpath:test-data.sql")
+                .build();
     }
 
     @Bean

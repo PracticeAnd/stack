@@ -29,6 +29,10 @@
         <input type="password" th:field="*{confirmPassword}"th:placeholder="#{register.confirm.password}"
                class="form-control"
                required=""/>
+        <input type="email" th:field="*{email}" th:placeholder="#{register.email}"
+               class="form-control"
+               required=""/>
+        <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
         <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{register.submit}"></button>
     </form>
 </div>

@@ -39,8 +39,8 @@ public class UserController {
             return "register";
         }
 
-        if(checkRegister(user.getLogin(), user.getPassword(), user.getConfirmPassword())) {
-            userDAO.addOrUpdateUser(new User(user.getLogin(), user.getPassword()));
+        if (checkRegister(user.getLogin(), user.getPassword(), user.getConfirmPassword())) {
+            userDAO.addOrUpdateUser(new User(user.getLogin(), user.getPassword(), user.getEmail()));
             return "index";
         } else
             return "error";
@@ -55,13 +55,13 @@ public class UserController {
 
         list = userDAO.listOfUser();
 
-        for(stack.model.User user : list) {
+        for (stack.model.User user : list) {
             System.out.println(user.getId());
-            if((user.getLogin().equals(login)))
+            if ((user.getLogin().equals(login)))
                 return false;
         }
 
-        if(!(password.equals(confirmPassword)))
+        if (!(password.equals(confirmPassword)))
             return false;
 
         return true;

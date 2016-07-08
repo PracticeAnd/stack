@@ -28,6 +28,8 @@
 
     <div>
         <input type="hidden" name="password" th:field="*{password}"/>
+        <input type="password" name="newpassword" th:field="*{newPassword}" th:placeholder="#{profile.password.new}"/>
+        <input type="password" name="confirmpassword" th:field="*{confirmPassword}" th:placeholder="#{profile.password.confirm}"/>
     </div>
     <div>
         <label th:text="#{profile.email}"/>
@@ -44,18 +46,9 @@
         <input type="text" name="lastname" th:value="${user.getLastName()}" th:field="*{lastName}" />
     </div>
 
-    <div>
-        <label th:text="#{profile.avatar}"/>
-        <input type="image" th:icon="*{avatar}"/>
-        <label th:text="#{profile.addAvatar}">
-            <input type="file"
-                   name="avatar"
-                   accept="image/jpeg,image/png,image/gif" th:field="*{avatar}"/>
-        </label>
-    </div>
-
     <button type="submit" th:text="#{button.save}"></button>
     <button type="reset" th:text="#{button.cancel}"></button>
 </form>
+
 </body>
 </html>
