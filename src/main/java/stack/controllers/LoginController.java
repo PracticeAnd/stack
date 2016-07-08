@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import stack.dao.UserDAO;
 import stack.model.User;
+import stack.dao.UserDAO;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,34 +24,34 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value="/", method = RequestMethod.POST)
     public String checkInputLoginDates(@Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "login";
-        }
+        } else
         return "redirect:/index";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String loginForm(@Valid User user,
                             final BindingResult errors) {
-        if (errors.hasErrors()) {
-            return "login";
-        }
+//        if (!errors.hasErrors()) {
+//            return "login";
+//        }
 
-        if(checkLogin(user.getLogin())) {
+        if(checkLoginAndPassword(user.getLogin(), user.getPassword())) {
             return "index";
         } else
             return "error";
     }
 
-    public boolean checkLogin(String name) {
-        List<stack.model.User> list;
+    public boolean checkLoginAndPassword(String name, String password) {
+        List<User> list;
 
         list = userDAO.listOfUser();
 
-        for(stack.model.User user : list) {
-            if(user.getLogin().equals(name))
+        for(User user : list) {
+            if((user.getLogin().equals(name)) && (user.getPassword().equals(password)))
                 return true;
         }
         return false;

@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
@@ -21,6 +21,9 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import stack.dao.UserDAO;
 import stack.dao.UserDAOImpl;
 
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.sql.DataSource;
 import java.util.Locale;
 
@@ -90,7 +93,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        //registry.addViewController("/index").setViewName("index");
+        registry.addViewController("/index").setViewName("index");
     }
 
     @Override
@@ -98,27 +101,26 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 
-/*    @Bean
-    public DataSource getDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/stack");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("admin");
+//    public void onStartup(ServletContext servletContext) throws ServletException {
+//        FilterRegistration.Dynamic encodingFilter = servletContext.addFilter("encoding-filter", new CharacterEncodingFilter());
+//        encodingFilter.setInitParameter("encoding", "UTF-8");
+//        encodingFilter.setInitParameter("forceEncoding", "true");
+//        encodingFilter.addMappingForUrlPatterns(null, true, "/*");
+//    }
 
-        return dataSource;
-    }*/
-
-    @Bean
-    public DataSource getDataSource() {
-        return new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScripts("classpath:schema.sql", "classpath:test-data.sql")
-                .build();
-    }
-
-    @Bean
-    public UserDAO getContactDAO() {
-        return new UserDAOImpl(getDataSource());
-    }
+//    @Bean
+//    public DataSource getDataSource() {
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName("org.postgresql.Driver");
+//        dataSource.setUrl("jdbc:postgresql://localhost:5432/stack");
+//        dataSource.setUsername("postgres");
+//        dataSource.setPassword("admin");
+//
+//        return dataSource;
+//    }
+//
+//    @Bean
+//    public UserDAO getContactDAO() {
+//        return new UserDAOImpl(getDataSource());
+//    }
 }

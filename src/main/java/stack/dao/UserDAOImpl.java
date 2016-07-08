@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserDAOImpl implements UserDAO {
+public class UserDAOImpl implements UserDAO{
 
     private JdbcTemplate jdbcTemplate;
 
@@ -24,50 +24,32 @@ public class UserDAOImpl implements UserDAO {
     //Добалвение нового пользователя в БД
     @Override
     public void addOrUpdateUser(User user) {
-        //String sql = "INSERT INTO stack.public.\"Users\" (login, password) VALUES (?, ?, ?)";
-        /*String sql = "INSERT INTO User (login, password, email, firstName, lastName, user_id) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, getPreparedStatement(user));
-*/
-        Integer id = user.getId();
-        if (id == null) {
-            String sql = "INSERT INTO User (login, password, email, firstName, lastName) VALUES (?, ?, ?, ?, ?)";
-            jdbcTemplate.update(sql,
-                    user.getLogin(),
-                    user.getPassword(),
-                    user.getEmail(),
-                    user.getFirstName(),
-                    user.getLastName());
-        } else {
-            jdbcTemplate.update("UPDATE USER SET login=?, password=?, email=?, firstName=?, lastName=? WHERE user_id=?",
-                    user.getLogin(),
-                    user.getPassword(),
-                    user.getEmail(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    id);
+        String sqlInsert = "INSERT INTO public.\"Users\" (login, password) VALUES (?, ?)";
+        String sqlUpdate = "UPDATE public.\"Users\" SET firstName = ?, secondName = ?, password = ?, email = ? WHERE user_id = ?";
+
+        if(user.getId() == null)
+            jdbcTemplate.update(sqlInsert, getPreparedStatementForInsert(user));
+        else {
+            jdbcTemplate.update(sqlUpdate, getPreparedStatementForUpdate(user));
         }
     }
 
     //Метод для вывода полного списка юзеров
     @Override
     public List<User> listOfUser() {
-        //String sql = "SELECT * FROM stack.public.\"Users\"";
-        String sql = "SELECT * FROM User";
+        String sql = "SELECT * FROM public.\"Users\"";
         List<User> userList = jdbcTemplate.query(sql, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
                 User user = new User();
 
-                user.setId(resultSet.getInt("user_id"));
-                user.setLogin(resultSet.getString("login"));
-                user.setPassword(resultSet.getString("password"));
-                user.setEmail(resultSet.getString("email"));
-                user.setFirstName(resultSet.getString("firstName"));
-                user.setLastName(resultSet.getString("lastName"));
+                user.setId(resultSet.getInt(3));
+                user.setLogin(resultSet.getString(1));
+                user.setPassword(resultSet.getString(2));
+
                 return user;
             }
         });
-
         return userList;
     }
 
@@ -78,75 +60,51 @@ public class UserDAOImpl implements UserDAO {
 
     }
 
-    //Метод для изменения или создания пользователя
-    private PreparedStatementSetter getPreparedStatement(final User user) {
+    //Метод для вытаскивания из базы юзера по id
+    @Override
+    public User getUser(Integer userId) {
+        String sql = "SELECT * FROM public.Users WHERE user_id = " + userId;
+
+        return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
+            @Override
+            public User extractData(ResultSet resultSet) throws SQLException,
+                    DataAccessException {
+                if (resultSet.next()) {
+                    User user = new User();
+
+                    user.setId(resultSet.getInt("user_id"));
+                    user.setLogin(resultSet.getString("login"));
+                    user.setPassword(resultSet.getString("password"));
+
+                    return user;
+                }
+            return null;
+            }
+        });
+    }
+
+    //Вспомогательный Метод для создания пользователя
+    private PreparedStatementSetter getPreparedStatementForInsert(final User user) {
         return new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement preparedStatement) throws SQLException {
-                int i = 0;
-
-                preparedStatement.setString(++i, user.getLogin());
-                preparedStatement.setString(++i, user.getPassword());
-                preparedStatement.setString(++i, user.getEmail());
-                preparedStatement.setString(++i, user.getFirstName());
-                preparedStatement.setString(++i, user.getLastName());
-                preparedStatement.setInt(++i, user.getId());
-                //
+                preparedStatement.setString(1, user.getLogin());
+                preparedStatement.setString(2, user.getPassword());
             }
         };
     }
 
-    //Метод для вытаскивания из базы юзера по id
-    @Override
-    public User getUser(Integer userId) {
-        //String sql = "SELECT * FROM stack.Users WHERE user_id = " + userId;
-        String sql = "SELECT * FROM User WHERE user_id = " + userId;
-
-        return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
+    //Вспомогательный метод для обновления информации о пользователе
+    private PreparedStatementSetter getPreparedStatementForUpdate(final User user) {
+        return new PreparedStatementSetter() {
             @Override
-            public User extractData(ResultSet resultSet) throws SQLException,
-                    DataAccessException {
-                if (resultSet.next()) {
-                    User user = new User();
-
-                    user.setId(resultSet.getInt("user_id"));
-                    user.setLogin(resultSet.getString("login"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setEmail(resultSet.getString("email"));
-                    user.setFirstName(resultSet.getString("firstName"));
-                    user.setLastName(resultSet.getString("lastName"));
-
-                    return user;
-                }
-                return null;
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setString(1, user.getFirstName());
+                preparedStatement.setString(2, user.getLastName());
+                preparedStatement.setString(3, user.getPassword());
+                preparedStatement.setString(4, user.getEmail());
+                preparedStatement.setInt(5, user.getId());
             }
-        });
-    }
-
-    //Метод для вытаскивания из базы юзера по login
-    @Override
-    public User getUserByLogin(String login) {
-        //String sql = "SELECT * FROM stack.Users WHERE login = " + login;
-        String sql = "SELECT * FROM User WHERE login = '" + login + "'";
-
-        return jdbcTemplate.query(sql, new ResultSetExtractor<User>() {
-            @Override
-            public User extractData(ResultSet resultSet) throws SQLException,
-                    DataAccessException {
-                if (resultSet.next()) {
-                    User user = new User();
-
-                    user.setId(resultSet.getInt("user_id"));
-                    user.setLogin(resultSet.getString("login"));
-                    user.setPassword(resultSet.getString("password"));
-                    user.setEmail(resultSet.getString("email"));
-                    user.setFirstName(resultSet.getString("firstName"));
-                    user.setLastName(resultSet.getString("lastName"));
-
-                    return user;
-                }
-                return null;
-            }
-        });
+        };
     }
 }

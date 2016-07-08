@@ -14,16 +14,19 @@
 <div align="right"><a href="?locale=en">English </a> | <a href="?locale=ru">Russian </a></div>
 
 <div class="wrapper">
-    <!--/*@thymesVar id="user" type="ru.stackoverflow.entity.User"*/-->
-    <form th:object="${user}" method="post" class="form-login">
+    <!--/*@thymesVar id="user" type="stack.model.User"*/-->
+    <form th:object="${user}" method="post" class="form-login"
+          action="#" th:action="@{register}">
         <h2 class="form-login-heading" th:text="#{register.title}"></h2>
         <input type="text" th:field="*{login}" th:placeholder="#{login.username}"
                class="form-control"
                required="" autofocus=""/>
+        <p class="error" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></p>
         <input type="password" th:field="*{password}" th:placeholder="#{register.password}"
                class="form-control"
                required=""/>
-        <input type="password" th:placeholder="#{register.confirm.password}"
+        <p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+        <input type="password" th:field="*{confirmPassword}"th:placeholder="#{register.confirm.password}"
                class="form-control"
                required=""/>
         <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{register.submit}"></button>

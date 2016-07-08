@@ -10,6 +10,8 @@ import stack.model.User;
 
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -37,10 +39,31 @@ public class UserController {
             return "register";
         }
 
-        return "redirect:/index";
+        if(checkRegister(user.getLogin(), user.getPassword(), user.getConfirmPassword())) {
+            userDAO.addOrUpdateUser(new User(user.getLogin(), user.getPassword()));
+            return "index";
+        } else
+            return "error";
+
+//        return "index";
         //userRepository.save(user);
         //return "redirect:/user/" + user.getUsername();
     }
 
+    private boolean checkRegister(String login, String password, String confirmPassword) {
+        List<User> list;
 
+        list = userDAO.listOfUser();
+
+        for(stack.model.User user : list) {
+            System.out.println(user.getId());
+            if((user.getLogin().equals(login)))
+                return false;
+        }
+
+        if(!(password.equals(confirmPassword)))
+            return false;
+
+        return true;
+    }
 }

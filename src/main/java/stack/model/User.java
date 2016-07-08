@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.File;
 
 public class User {
     private Integer id;
@@ -17,6 +16,10 @@ public class User {
     @Size(min = 5, max = 25, message = "{password.size}")
     private String password;
 
+    @NotNull
+    @Size(min = 5, max = 25, message = "{password.size}")
+    private String confirmPassword;
+
     @Email
     private String email;
 
@@ -26,12 +29,7 @@ public class User {
     @Size(min = 2, max = 16, message = "{lastName.size}")
     private String lastName;
 
-    private File avatar;
-
     public User() {
-        login = "";
-        password = "";
-        email = "mail@example.com";
     }
 
     public User(String login, String password) {
@@ -39,10 +37,7 @@ public class User {
         this.password = password;
     }
 
-    public User(int id, String login, String password) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
+    public User(String login, String password, Integer id) {
     }
 
     public Integer getId() {
@@ -93,12 +88,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public File getAvatar() {
-        return avatar;
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public void setAvatar(File avatar) {
-        this.avatar = avatar;
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     @Override
@@ -112,6 +107,4 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 '}';
     }
-
-
 }
